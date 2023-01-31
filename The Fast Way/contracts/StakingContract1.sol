@@ -137,13 +137,10 @@ contract StakingRewards {
         return stakes[user].rewardsStaked * rewardRate * (block.timestamp - stakes[user].lastHarvestTime) / totalRewardsStaked;
     }
 
-
-    //earned function ???
-
     //State change functions
+    
      function stake(uint256 _amount) external payable notPaused updateReward {
         require(_amount > 0, "Amount should be more than 0");
-        require(msg.value == _amount);
         require(msg.sender != address(0));
         require(stakingToken.transferFrom(msg.sender, address(this), _amount), "Token Transfer Failed");
         stakers[msg.sender] = true;
@@ -213,7 +210,7 @@ contract StakingRewards {
         }
 
         return
-            rewardPerTokenStored +(rewardRate * (lastTimeRewardApplicable() - updatedAt) * 1e18) / totalStaked; //check
+            rewardPerTokenStored +(rewardRate * (lastTimeRewardApplicable() - updatedAt) * 1e18) / totalStaked;
     }
 
     //Restricted Functions
