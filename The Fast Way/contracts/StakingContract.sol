@@ -175,6 +175,7 @@ contract StakingRewards {
         stakes[msg.sender].lastHarvestTime = block.timestamp;
         totalRewardsStaked += _rewardsStaked;
         emit HarvestComplete(msg.sender);
+        emit Restaked(msg.sender, stakes[msg.sender].stakedAmount, _rewardsStaked);
         mutex = false;
     }
 
