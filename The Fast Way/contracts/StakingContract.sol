@@ -12,23 +12,41 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 contract StakingRewards {
     using SafeERC20 for IERC20;
 
+    //holds the address of the ERC20 token that the users will be staking.
     IERC20 public immutable stakingToken;
+    //holds the address of the ERC20 token that will be used as rewards.
     IERC20 public immutable rewardsToken;
     
+    //address of the contract administrator.
     address public admin;
-
+    
+    //holds the number of seconds a user's stake will be locked up
+    //before they can claim the rewards.
     uint256 public lockupTime;
     uint256 public rewardRate;
+    //reward per token staked.
     uint256 public rewardPerTokenStored;
+    //total number of tokens staked by all users.
     uint256 public totalStaked;
+    //holds the total number of rewards staked by all users.
     uint256 public totalRewardsStaked;
     uint256 public extraRewardRate;
+    //holds the cooldown period before users can withdraw staked amount in seconds.
     uint256 public cooldownPeriod;
+    //holds the timestamp when the rewards were last updated.
     uint256 public updatedAt;
-
+    
+    //implements mutex and prevents multiple transactions from executing simultaneously.
     bool public mutex = false;
+    //to pause the contract temporarily.
     bool public pause = false;
 
+
+    /*  holds the information of each user's stake, 
+    such as the staked amount, rewards staked, 
+    cooldown end time, finish time, last harvest time, 
+    total rewards, and whitelist status.
+    */
     struct UserInfo {
         uint256 stakedAmount;
         uint256 rewardsStaked;
@@ -43,11 +61,16 @@ contract StakingRewards {
         uint256 stakeWithdraw;
         uint256 rewardsWithdraw;
     }
-
+    
+    //holds the information of each user's stake.
     mapping(address => UserInfo) public stakes;
+    //to check if address is staker or not
     mapping(address => bool) public stakers;
+    //holds the reward per token paid to each user.
     mapping(address => uint256) public userRewardPerTokenPaid;
+    //holds the details of the amount to be withdrawn by each user.
     mapping(address => UserWithdrawal) public withdrawDetails;
+    //rewards earned by each user.
     mapping(address => uint256) public rewards;
 
     constructor(address _stakingToken, address _rewardsToken) public {
