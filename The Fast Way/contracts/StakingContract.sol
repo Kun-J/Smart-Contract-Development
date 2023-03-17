@@ -157,7 +157,7 @@ contract StakingRewards {
 
 
     function getExtraRewards(address user) public view returns (uint256) {
-        return stakes[user].rewardsStaked * rewardRate * (block.timestamp - stakes[user].lastHarvestTime) / totalRewardsStaked;
+        return stakes[user].rewardsStaked * rewardRate * (block.timestamp - stakes[user].lastHarvestTime) * 1e18 / totalRewardsStaked;
     }
 
     //State change functions
